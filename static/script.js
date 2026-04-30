@@ -1,32 +1,23 @@
-async function calcolaIMC() {
-    let a = document.getElementById("peso").value;
-    let b = document.getElementById("altezza").value;
-    if (!peso || !altezza ) 
-        return alert("Scrivi  un peso e  un altezza");
-    
-    let response = await fetch(`/imc?a=${a}&b=${b}`);
-    let data = await response.json();
+async function calcolaIMC_conPost() {
+    const pesoVal = document.getElementById("peso").value;
+    const altezzaVal = document.getElementById("altezza").value;
 
-    document.getElementById("risultato").innerText = "Il tuo IMC è: " + data.risultato;
-     }
-async function CalocloIMC_conPost() {
+    if (!pesoVal || !altezzaVal) {
+        return alert("Inserisci tutti i valori richiesti");
+    }
 
-    const a = document.getElementById("peso").value;
-    const b = document.getElementById("altezza").value;
-
-    if (!peso || !altezza)
-        return alert("Scrivi il pesa e la altezza");
+    const formData = new URLSearchParams();
+    formData.append('peso', pesoVal);
+    formData.append('altezza', altezzaVal);
 
     const res = await fetch("/imc2", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: `a=${peso}&b=${altezza}`
-       
+        headers: { "Content-Type":"/workspaces/Verifica_FastAPI/IMC.xlsx" },
+        body: formData
     });
- const json = await res.json();
 
-         }
-   
-    document.getElementById('btn_calcoloIMC').addEventListener('click', calcolaIMC);
+    const data = await res.json();
+    document.getElementById("risultato").innerText = `IMC calcolato: ${data.risultato}`;
+}
+
+document.getElementById('btn_calcoloIMC').addEventListener('click', calcolaIMC_conPost);
